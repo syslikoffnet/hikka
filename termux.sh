@@ -2,7 +2,7 @@
 
 echo -e "\033[2J\033[3;1f"
 
-eval "cat ~/Hikka/assets/download.txt"
+cat "$(cd "$(dirname "$0")" && pwd)/assets/download.txt" 2>/dev/null || true
 printf "\n\n\033[1;35mHikka is being installed... ✨\033[0m"
 
 echo -e "\n\n\033[0;96mInstalling base packages...\033[0m"
@@ -29,7 +29,10 @@ eval "cd && git clone https://github.com/hikariatama/Hikka && cd Hikka"
 echo -e "\033[0;96mSource code downloaded!...\033[0m\n"
 printf "\r\033[0;34mInstalling requirements...\e[0m"
 
-eval "pip install -r requirements.txt --no-cache-dir --no-warn-script-location --disable-pip-version-check --upgrade"
+if ! python -m pip install -r requirements.txt --no-cache-dir --no-warn-script-location --disable-pip-version-check --upgrade; then
+    printf "\n\033[1;31mDependency installation failed. Check the error above and retry.\033[0m\n"
+    exit 1
+fi
 
 printf "\r\033[K\033[0;32mRequirements installed!\e[0m\n"
 
